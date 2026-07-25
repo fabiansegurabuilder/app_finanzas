@@ -126,7 +126,7 @@ export function FormularioTransaccion({
         <div className="space-y-2">
           <Label>Tipo</Label>
           <Select name="tipo" value={tipo} onValueChange={cambiarTipo}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" aria-label="Tipo">
               <SelectValue placeholder="Tipo" />
             </SelectTrigger>
             <SelectContent>
@@ -142,7 +142,7 @@ export function FormularioTransaccion({
             value={categoria}
             onValueChange={(v) => setCategoria(v ?? "")}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" aria-label="Categoría">
               <SelectValue placeholder="Categoría" />
             </SelectTrigger>
             <SelectContent>

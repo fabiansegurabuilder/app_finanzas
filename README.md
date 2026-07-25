@@ -80,12 +80,37 @@ src/
 └── types/        # Tipos compartidos
 ```
 
+## Pruebas y calidad
+
+```bash
+npm run typecheck   # Tipos (tsc --noEmit)
+npm run lint        # ESLint
+npm run test        # Vitest (lógica de dominio y componentes)
+npm run build       # Compilación de producción
+```
+
+Las pruebas cubren la lógica pura crítica (resumen financiero, agrupación por
+categoría, generación de CSV, validación con Zod y utilidades de fecha) y un
+render de componente con Testing Library.
+
+## Accesibilidad
+
+- Diseño **mobile-first** y responsive (tabla en escritorio, tarjetas en móvil).
+- `lang="es"`, landmarks (`main` con enlace **«Saltar al contenido»**).
+- Controles con etiquetas accesibles (`aria-label`), formularios con `label`,
+  y diálogos con título y descripción.
+- Colores gestionados por **tokens semánticos** con variantes clara y oscura.
+
 ## Despliegue en Vercel
 
 1. Sube el repositorio a GitHub.
-2. En [Vercel](https://vercel.com), importa el repositorio.
-3. Configura las variables de entorno (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`) en **Project Settings → Environment Variables**.
-4. Vercel detecta Next.js y despliega automáticamente en cada push.
+2. En [Vercel](https://vercel.com), importa el repositorio (detecta Next.js automáticamente).
+3. En **Project Settings → Environment Variables**, define:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL` con el dominio del despliegue (ej. `https://tu-app.vercel.app`), para los metadatos Open Graph.
+4. En Supabase, **Authentication → URL Configuration**, agrega tu dominio de Vercel como _Site URL_ y a las _Redirect URLs_.
+5. Cada `push` a la rama principal despliega automáticamente.
 
 ## Estado del proyecto
 
@@ -93,4 +118,4 @@ src/
 - [x] **Fase 2** — Design system, layout, navegación y metadatos SEO.
 - [x] **Fase 3** — Supabase: esquema, RLS, autenticación y protección de rutas.
 - [x] **Fase 4** — Dashboard con gráfico, CRUD de transacciones, filtros, búsqueda y exportación CSV.
-- [ ] **Fase 5** — Pruebas, verificación responsive/accesible y despliegue.
+- [x] **Fase 5** — Pruebas, verificación responsive/accesible y despliegue.

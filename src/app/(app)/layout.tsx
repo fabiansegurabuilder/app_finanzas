@@ -24,6 +24,12 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-svh w-full">
+      <a
+        href="#contenido"
+        className="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:text-sm focus:font-medium"
+      >
+        Saltar al contenido
+      </a>
       {/* Sidebar (escritorio) */}
       <aside className="border-sidebar-border bg-sidebar hidden w-64 shrink-0 flex-col border-r md:flex">
         <div className="border-sidebar-border flex h-16 items-center border-b px-6">
@@ -45,7 +51,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           <Logo />
         </header>
 
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <main id="contenido" className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
           <div className="mx-auto w-full max-w-6xl space-y-6">{children}</div>
         </main>
       </div>
