@@ -89,6 +89,31 @@ export type PresupuestoInsert = Omit<
 
 export type PresupuestoUpdate = Partial<PresupuestoInsert>;
 
+export type RecurrenteRow = {
+  id: string;
+  user_id: string;
+  descripcion: string;
+  valor: number;
+  tipo: "ingreso" | "gasto";
+  categoria: string;
+  frecuencia: "semanal" | "quincenal" | "mensual";
+  proxima_fecha: string;
+  activa: boolean;
+  created_at: string;
+};
+
+export type RecurrenteInsert = Omit<
+  RecurrenteRow,
+  "id" | "user_id" | "created_at" | "activa"
+> & {
+  id?: string;
+  user_id?: string;
+  activa?: boolean;
+  created_at?: string;
+};
+
+export type RecurrenteUpdate = Partial<RecurrenteInsert>;
+
 export interface Database {
   public: {
     Tables: {
@@ -114,6 +139,12 @@ export interface Database {
         Row: PresupuestoRow;
         Insert: PresupuestoInsert;
         Update: PresupuestoUpdate;
+        Relationships: [];
+      };
+      recurring_transactions: {
+        Row: RecurrenteRow;
+        Insert: RecurrenteInsert;
+        Update: RecurrenteUpdate;
         Relationships: [];
       };
     };

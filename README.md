@@ -56,6 +56,7 @@ Definidas en `.env.example`. Copia el archivo a `.env.local` y completa:
    - [`0003_categorias.sql`](supabase/migrations/0003_categorias.sql): tabla `categories` (categorías personalizadas) con RLS.
    - [`0004_metas.sql`](supabase/migrations/0004_metas.sql): tabla `goals` (metas de ahorro) con RLS.
    - [`0005_presupuestos.sql`](supabase/migrations/0005_presupuestos.sql): tabla `budgets` (presupuestos por categoría) con RLS.
+   - [`0006_recurrentes.sql`](supabase/migrations/0006_recurrentes.sql): tabla `recurring_transactions` (movimientos recurrentes) con RLS.
 4. En **Authentication → Providers → Email**, habilita el proveedor de correo/contraseña. Para probar sin bandeja de correo, puedes desactivar _Confirm email_ (así el registro inicia sesión de inmediato).
 
 Sin estas variables, la landing pública funciona, pero las rutas protegidas y la autenticación no estarán disponibles.
