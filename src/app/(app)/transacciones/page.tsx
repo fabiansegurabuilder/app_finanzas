@@ -4,7 +4,8 @@ import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { mesActual } from "@/lib/fechas";
+import { mesActual, anioActual, esAnioValido } from "@/lib/fechas";
+import type { Vista } from "@/components/selector-periodo";
 import { listarTransacciones } from "@/features/transacciones/data";
 import { FiltrosTransacciones } from "@/features/transacciones/components/filtros-transacciones";
 import { TablaTransacciones } from "@/features/transacciones/components/tabla-transacciones";
@@ -17,17 +18,33 @@ export const metadata: Metadata = {
 };
 
 interface TransaccionesPageProps {
-  searchParams: Promise<{ mes?: string; categoria?: string; q?: string }>;
+  searchParams: Promise<{
+    vista?: string;
+    mes?: string;
+    anio?: string;
+    categoria?: string;
+    q?: string;
+  }>;
 }
 
 export default async function TransaccionesPage({
   searchParams,
 }: TransaccionesPageProps) {
-  const { mes: mesParam, categoria, q } = await searchParams;
-  const mes = mesParam ?? mesActual();
+  const params = await searchParams;
+  const { categoria, q } = params;
+  const vista: Vista = params.vista === "anio" ? "anio" : "mes";
+  const mes = params.mes ?? mesActual();
+  const anio =
+    params.anio && esAnioValido(params.anio) ? params.anio : anioActual();
 
-  const transacciones = await listarTransacciones({ mes, categoria, q });
+  const filtroPeriodo = vista === "anio" ? { anio } : { mes };
+  const transacciones = await listarTransacciones({
+    ...filtroPeriodo,
+    categoria,
+    q,
+  });
   const hayFiltrosTexto = Boolean(q || categoria);
+  const sufijoExport = vista === "anio" ? anio : mes;
 
   return (
     <>
@@ -36,7 +53,7 @@ export default async function TransaccionesPage({
         descripcion="Registra, edita y filtra tus ingresos y gastos."
         acciones={
           <>
-            <BotonExportar transacciones={transacciones} mes={mes} />
+            <BotonExportar transacciones={transacciones} mes={sufijoExport} />
             <DialogoTransaccion
               trigger={
                 <Button>
@@ -49,7 +66,13 @@ export default async function TransaccionesPage({
         }
       />
 
-      <FiltrosTransacciones mes={mes} categoria={categoria} q={q} />
+      <FiltrosTransacciones
+        vista={vista}
+        mes={mes}
+        anio={anio}
+        categoria={categoria}
+        q={q}
+      />
 
       {transacciones.length === 0 ? (
         <Card>

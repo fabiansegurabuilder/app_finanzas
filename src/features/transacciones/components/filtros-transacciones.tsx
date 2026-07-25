@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -11,29 +11,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SelectorPeriodo, type Vista } from "@/components/selector-periodo";
 import { CATEGORIAS } from "@/lib/categorias";
-import { mesesRecientes } from "@/lib/fechas";
 
 const TODAS = "todas";
 
 interface FiltrosTransaccionesProps {
+  vista: Vista;
   mes: string;
+  anio: string;
   categoria?: string;
   q?: string;
 }
 
-/** Barra de filtros que sincroniza mes, categoría y búsqueda con la URL. */
+/** Barra de filtros: periodo (mes/año), categoría y búsqueda. */
 export function FiltrosTransacciones({
+  vista,
   mes,
+  anio,
   categoria,
   q,
 }: FiltrosTransaccionesProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [, iniciarTransicion] = useTransition();
 
-  const meses = mesesRecientes(12);
   const [busqueda, setBusqueda] = useState(q ?? "");
 
   const actualizarParam = useCallback(
@@ -44,9 +46,7 @@ export function FiltrosTransacciones({
       } else {
         params.delete(clave);
       }
-      iniciarTransicion(() => {
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-      });
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams],
   );
@@ -62,7 +62,7 @@ export function FiltrosTransacciones({
   }, [busqueda, searchParams, actualizarParam]);
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
       <div className="relative flex-1">
         <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
         <Input
@@ -74,18 +74,7 @@ export function FiltrosTransacciones({
         />
       </div>
 
-      <Select value={mes} onValueChange={(v) => actualizarParam("mes", v)}>
-        <SelectTrigger className="w-full sm:w-52" aria-label="Filtrar por mes">
-          <SelectValue placeholder="Mes" />
-        </SelectTrigger>
-        <SelectContent>
-          {meses.map((m) => (
-            <SelectItem key={m.valor} value={m.valor} className="capitalize">
-              {m.etiqueta}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <SelectorPeriodo vista={vista} mes={mes} anio={anio} />
 
       <Select
         value={categoria ?? TODAS}
@@ -94,7 +83,7 @@ export function FiltrosTransacciones({
         }
       >
         <SelectTrigger
-          className="w-full sm:w-48"
+          className="w-full lg:w-48"
           aria-label="Filtrar por categoría"
         >
           <SelectValue placeholder="Categoría" />

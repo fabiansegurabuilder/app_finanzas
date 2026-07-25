@@ -1,11 +1,13 @@
 import "server-only";
 import { crearClienteServidor } from "@/lib/supabase/server";
-import { rangoMes, esMesValido } from "@/lib/fechas";
+import { rangoMes, esMesValido, rangoAnio, esAnioValido } from "@/lib/fechas";
 import type { Transaccion } from "@/types/transaccion";
 
 export interface FiltrosTransacciones {
   /** Mes en formato "YYYY-MM". */
   mes?: string;
+  /** Año en formato "YYYY" (filtra el año completo; ignora `mes`). */
+  anio?: string;
   /** Id de categoría. */
   categoria?: string;
   /** Texto de búsqueda por descripción. */
@@ -27,7 +29,10 @@ export async function listarTransacciones(
     .order("fecha", { ascending: false })
     .order("created_at", { ascending: false });
 
-  if (filtros.mes && esMesValido(filtros.mes)) {
+  if (filtros.anio && esAnioValido(filtros.anio)) {
+    const { inicio, fin } = rangoAnio(filtros.anio);
+    consulta = consulta.gte("fecha", inicio).lte("fecha", fin);
+  } else if (filtros.mes && esMesValido(filtros.mes)) {
     const { inicio, fin } = rangoMes(filtros.mes);
     consulta = consulta.gte("fecha", inicio).lte("fecha", fin);
   }

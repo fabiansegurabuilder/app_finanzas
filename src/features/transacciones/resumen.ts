@@ -1,5 +1,6 @@
 import type { Transaccion } from "@/types/transaccion";
 import { obtenerCategoria } from "@/lib/categorias";
+import { MESES_CORTOS } from "@/lib/fechas";
 
 export interface ResumenFinanciero {
   ingresos: number;
@@ -54,4 +55,43 @@ export function agruparGastosPorCategoria(
       };
     })
     .sort((a, b) => b.total - a.total);
+}
+
+export interface ResumenMensual {
+  /** Número de mes (1–12). */
+  mes: number;
+  /** Etiqueta corta (ene, feb, …). */
+  etiqueta: string;
+  ingresos: number;
+  gastos: number;
+  saldo: number;
+}
+
+/**
+ * Agrupa las transacciones de un año en sus 12 meses (rellena con ceros los
+ * meses sin movimientos). Útil para el histórico anual.
+ */
+export function agruparPorMes(
+  transacciones: readonly Transaccion[],
+): ResumenMensual[] {
+  const meses: ResumenMensual[] = MESES_CORTOS.map((etiqueta, i) => ({
+    mes: i + 1,
+    etiqueta,
+    ingresos: 0,
+    gastos: 0,
+    saldo: 0,
+  }));
+
+  for (const t of transacciones) {
+    const indice = Number(t.fecha.slice(5, 7)) - 1;
+    if (indice < 0 || indice > 11) continue;
+    if (t.tipo === "ingreso") meses[indice].ingresos += t.valor;
+    else meses[indice].gastos += t.valor;
+  }
+
+  for (const m of meses) {
+    m.saldo = m.ingresos - m.gastos;
+  }
+
+  return meses;
 }

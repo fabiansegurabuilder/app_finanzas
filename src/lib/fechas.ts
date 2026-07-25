@@ -48,3 +48,40 @@ export function mesAnterior(mes: string): string {
   const base = parse(mes, "yyyy-MM", new Date());
   return format(subMonths(base, 1), "yyyy-MM");
 }
+
+/** Año actual en formato "YYYY". */
+export function anioActual(): string {
+  return format(new Date(), "yyyy");
+}
+
+/** Valida que una cadena tenga el formato "YYYY". */
+export function esAnioValido(anio: string): boolean {
+  return /^\d{4}$/.test(anio);
+}
+
+/** Rango de fechas (ISO) que cubre un año completo. */
+export function rangoAnio(anio: string): { inicio: string; fin: string } {
+  return { inicio: `${anio}-01-01`, fin: `${anio}-12-31` };
+}
+
+/** Lista los últimos `cantidad` años (del más reciente al más antiguo). */
+export function aniosRecientes(cantidad = 5): string[] {
+  const actual = Number(anioActual());
+  return Array.from({ length: cantidad }, (_, i) => String(actual - i));
+}
+
+/** Nombres cortos de los 12 meses (ene, feb, …). */
+export const MESES_CORTOS = [
+  "ene",
+  "feb",
+  "mar",
+  "abr",
+  "may",
+  "jun",
+  "jul",
+  "ago",
+  "sep",
+  "oct",
+  "nov",
+  "dic",
+] as const;
