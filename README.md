@@ -107,16 +107,31 @@ render de componente con Testing Library.
   y diálogos con título y descripción.
 - Colores gestionados por **tokens semánticos** con variantes clara y oscura.
 
+## Seguridad
+
+- **Sin secretos en el repositorio.** `.gitignore` excluye `.env*` (salvo `.env.example`), `node_modules`, `.next` y `.vercel`.
+- Las variables `NEXT_PUBLIC_*` son **públicas por diseño** (se incrustan en el navegador). La clave _anon/publishable_ de Supabase es pública a propósito; la seguridad real la aportan las **políticas RLS**. **Nunca** uses la clave `service_role` en el cliente ni con prefijo `NEXT_PUBLIC_`.
+- **Row Level Security** activo en todas las tablas: cada usuario solo accede a sus propias filas.
+- **Cabeceras de seguridad** en [`next.config.ts`](next.config.ts): `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security` y una **Content-Security-Policy** en producción (permite Supabase). Se oculta `X-Powered-By`.
+- Rutas protegidas por middleware (`proxy.ts`) + verificación de sesión en el layout autenticado.
+
 ## Despliegue en Vercel
 
-1. Sube el repositorio a GitHub.
-2. En [Vercel](https://vercel.com), importa el repositorio (detecta Next.js automáticamente).
-3. En **Project Settings → Environment Variables**, define:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `NEXT_PUBLIC_SITE_URL` con el dominio del despliegue (ej. `https://tu-app.vercel.app`), para los metadatos Open Graph.
-4. En Supabase, **Authentication → URL Configuration**, agrega tu dominio de Vercel como _Site URL_ y a las _Redirect URLs_.
-5. Cada `push` a la rama principal despliega automáticamente.
+1. **Sube el repositorio a GitHub** (ya sin secretos).
+2. En [Vercel](https://vercel.com) → **Add New → Project** → importa el repo (detecta Next.js automáticamente).
+3. En **Project Settings → Environment Variables**, define (Production y Preview):
+
+   | Variable | Obligatoria | Valor |
+   | --- | --- | --- |
+   | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | URL del proyecto Supabase |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Clave anon/publishable |
+   | `NEXT_PUBLIC_SITE_URL` | ✅ | Dominio de Vercel (ej. `https://tu-app.vercel.app`) |
+   | `NEXT_PUBLIC_APP_NAME` | opcional | Nombre visible de la app |
+   | `NEXT_PUBLIC_MONEDA` / `NEXT_PUBLIC_LOCALE` | opcional | Moneda y locale |
+
+4. En **Supabase → SQL Editor**, ejecuta en orden las migraciones de [`supabase/migrations`](supabase/migrations) (`0001`…`0006`).
+5. En **Supabase → Authentication → URL Configuration**, agrega tu dominio de Vercel como _Site URL_ y en _Redirect URLs_.
+6. **Deploy.** Cada `push` a la rama principal vuelve a desplegar automáticamente.
 
 ## Estado del proyecto
 
