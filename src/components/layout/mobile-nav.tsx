@@ -15,7 +15,15 @@ import { Logo } from "@/components/layout/logo";
 import { UserNav } from "@/components/layout/user-nav";
 
 /** Menú de navegación para pantallas pequeñas (se abre en un panel lateral). */
-export function MobileNav({ email }: { email: string }) {
+export function MobileNav({
+  email,
+  nombre,
+  avatarUrl,
+}: {
+  email: string;
+  nombre?: string;
+  avatarUrl?: string;
+}) {
   const [abierto, setAbierto] = useState(false);
 
   return (
@@ -42,7 +50,7 @@ export function MobileNav({ email }: { email: string }) {
           <NavLinks onNavegar={() => setAbierto(false)} />
         </div>
         <div className="border-border border-t p-4">
-          <UserNav email={email} />
+          <UserNav email={email} nombre={nombre} avatarUrl={avatarUrl} />
         </div>
       </SheetContent>
     </Sheet>

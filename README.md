@@ -50,7 +50,9 @@ Definidas en `.env.example`. Copia el archivo a `.env.local` y completa:
 
 1. Crea un proyecto en [Supabase](https://supabase.com).
 2. En **Project Settings → API**, copia la _Project URL_ y la clave _anon public_ a tu `.env.local`.
-3. En el **SQL Editor**, ejecuta el script [`supabase/migrations/0001_transacciones.sql`](supabase/migrations/0001_transacciones.sql). Crea la tabla `transactions`, sus índices y las políticas de **Row Level Security** (cada usuario solo accede a sus propias filas).
+3. En el **SQL Editor**, ejecuta los scripts de [`supabase/migrations`](supabase/migrations) en orden:
+   - [`0001_transacciones.sql`](supabase/migrations/0001_transacciones.sql): tabla `transactions`, índices y **Row Level Security** (cada usuario solo accede a sus propias filas).
+   - [`0002_perfil_avatars.sql`](supabase/migrations/0002_perfil_avatars.sql): bucket de Storage `avatars` y políticas para las fotos de perfil.
 4. En **Authentication → Providers → Email**, habilita el proveedor de correo/contraseña. Para probar sin bandeja de correo, puedes desactivar _Confirm email_ (así el registro inicia sesión de inmediato).
 
 Sin estas variables, la landing pública funciona, pero las rutas protegidas y la autenticación no estarán disponibles.

@@ -22,6 +22,8 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   }
 
   const email = user.email ?? "Usuario";
+  const nombre = user.user_metadata?.full_name as string | undefined;
+  const avatarUrl = user.user_metadata?.avatar_url as string | undefined;
 
   return (
     <div className="flex min-h-svh w-full">
@@ -41,7 +43,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           <NavLinks />
         </div>
         <div className="border-sidebar-border border-t p-4">
-          <UserNav email={email} />
+          <UserNav email={email} nombre={nombre} avatarUrl={avatarUrl} />
         </div>
       </aside>
 
@@ -49,7 +51,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Barra superior (móvil) */}
         <header className="border-border bg-background flex h-16 items-center gap-3 border-b px-4 md:hidden">
-          <MobileNav email={email} />
+          <MobileNav email={email} nombre={nombre} avatarUrl={avatarUrl} />
           <Logo />
           <div className="ml-auto">
             <ThemeToggle />

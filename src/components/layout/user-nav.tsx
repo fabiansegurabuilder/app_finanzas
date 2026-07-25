@@ -1,33 +1,62 @@
-import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
+"use client";
+
+import Link from "next/link";
+import { ChevronsUpDown, LogOut, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { UserAvatar } from "@/components/layout/user-avatar";
 import { cerrarSesion } from "@/features/auth/actions";
 
-/** Muestra el usuario actual y permite cerrar sesión. */
-export function UserNav({ email }: { email: string }) {
-  const iniciales = email.slice(0, 2).toUpperCase();
+interface UserNavProps {
+  email: string;
+  nombre?: string;
+  avatarUrl?: string;
+}
+
+/** Menú del usuario: perfil y cerrar sesión. */
+export function UserNav({ email, nombre, avatarUrl }: UserNavProps) {
+  const mostrar = nombre?.trim() || email;
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium">
-        {iniciales}
-      </div>
-      <p
-        className="text-foreground min-w-0 flex-1 truncate text-sm font-medium"
-        title={email}
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <button
+            type="button"
+            className="hover:bg-accent flex w-full items-center gap-2 rounded-lg p-2 text-left transition-colors"
+          />
+        }
       >
-        {email}
-      </p>
-      <form action={cerrarSesion}>
-        <Button
-          type="submit"
-          variant="ghost"
-          size="icon"
-          aria-label="Cerrar sesión"
-          title="Cerrar sesión"
-        >
+        <UserAvatar nombre={nombre} email={email} avatarUrl={avatarUrl} />
+        <span className="min-w-0 flex-1">
+          <span className="text-foreground block truncate text-sm font-medium">
+            {mostrar}
+          </span>
+          <span className="text-muted-foreground block truncate text-xs">
+            {email}
+          </span>
+        </span>
+        <ChevronsUpDown className="text-muted-foreground size-4 shrink-0" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel className="truncate">{mostrar}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem render={<Link href="/perfil" />}>
+          <User className="size-4" />
+          Mi perfil
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="destructive" onClick={() => cerrarSesion()}>
           <LogOut className="size-4" />
-        </Button>
-      </form>
-    </div>
+          Cerrar sesión
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

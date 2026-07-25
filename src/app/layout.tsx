@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { NOMBRE_APP } from "@/lib/app-config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +15,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const tituloApp = "Finanzas Personales";
+const tituloApp = NOMBRE_APP;
 const descripcionApp =
   "Registra ingresos y gastos, categorízalos y visualiza tu saldo mensual en un dashboard claro.";
 
