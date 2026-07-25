@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# App Finanzas Personales
 
-## Getting Started
+Web app para gestionar finanzas personales: registra **ingresos** y **gastos**, categorízalos y visualiza un **dashboard** con el resumen mensual (ingreso total, gasto total y saldo), gráfico por categoría, filtros y exportación a CSV.
 
-First, run the development server:
+> Proyecto de clase. Cada usuario autenticado ve y gestiona únicamente sus propias transacciones (Row Level Security en Supabase).
+
+## Stack
+
+- **Next.js** (App Router) + **TypeScript** (modo estricto)
+- **Tailwind CSS v4** + **shadcn/ui**
+- **Recharts** para gráficos
+- **Supabase** (PostgreSQL + Auth + RLS) como backend
+- **Vitest** + **Testing Library** para pruebas
+- Despliegue en **Vercel**
+
+## Requisitos previos
+
+- **Node.js 18.18+** (recomendado 20+)
+- **npm**
+- Una cuenta de **Supabase** (para las fases de backend)
+
+## Puesta en marcha
 
 ```bash
+# 1. Instalar dependencias
+npm install
+
+# 2. Configurar variables de entorno
+cp .env.example .env.local
+# Edita .env.local con los datos de tu proyecto Supabase
+
+# 3. Levantar el entorno de desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La app queda disponible en http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Variables de entorno
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Definidas en `.env.example`. Copia el archivo a `.env.local` y completa:
 
-## Learn More
+| Variable                        | Descripción                                         |
+| ------------------------------- | --------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | URL del proyecto Supabase (Project Settings → API). |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave pública anónima de Supabase (anon public).    |
 
-To learn more about Next.js, take a look at the following resources:
+> Nunca subas `.env.local` ni claves reales al repositorio. `.gitignore` ya excluye los archivos `.env*` (salvo `.env.example`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts disponibles
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Script                 | Descripción                               |
+| ---------------------- | ----------------------------------------- |
+| `npm run dev`          | Entorno de desarrollo.                    |
+| `npm run build`        | Compilación de producción.                |
+| `npm run start`        | Sirve la compilación de producción.       |
+| `npm run lint`         | Linter (ESLint).                          |
+| `npm run typecheck`    | Verificación de tipos (`tsc --noEmit`).   |
+| `npm run test`         | Pruebas (Vitest).                         |
+| `npm run test:watch`   | Pruebas en modo watch.                    |
+| `npm run format`       | Formatea el código con Prettier.          |
+| `npm run format:check` | Verifica el formato sin escribir cambios. |
 
-## Deploy on Vercel
+## Estructura del proyecto
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```text
+src/
+├── app/          # Rutas (App Router) y layouts
+├── components/   # UI reutilizable (incluye components/ui de shadcn)
+├── features/     # Lógica por dominio (transacciones, dashboard, auth)
+├── lib/          # Utilidades y clientes (Supabase, helpers)
+└── types/        # Tipos compartidos
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Despliegue en Vercel
+
+1. Sube el repositorio a GitHub.
+2. En [Vercel](https://vercel.com), importa el repositorio.
+3. Configura las variables de entorno (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`) en **Project Settings → Environment Variables**.
+4. Vercel detecta Next.js y despliega automáticamente en cada push.
+
+## Estado del proyecto
+
+- [x] **Fase 1** — Setup del repositorio, tooling y calidad.
+- [ ] **Fase 2** — Design system, layout y navegación.
+- [ ] **Fase 3** — Supabase: esquema, RLS y autenticación.
+- [ ] **Fase 4** — Dashboard, CRUD de transacciones, filtros y exportación CSV.
+- [ ] **Fase 5** — Pruebas, verificación responsive/accesible y despliegue.
