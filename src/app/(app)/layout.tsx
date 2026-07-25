@@ -4,6 +4,7 @@ import { Logo } from "@/components/layout/logo";
 import { NavLinks } from "@/components/layout/nav-links";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { UserNav } from "@/components/layout/user-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { crearClienteServidor } from "@/lib/supabase/server";
 
 /**
@@ -32,8 +33,9 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
       </a>
       {/* Sidebar (escritorio) */}
       <aside className="border-sidebar-border bg-sidebar hidden w-64 shrink-0 flex-col border-r md:flex">
-        <div className="border-sidebar-border flex h-16 items-center border-b px-6">
+        <div className="border-sidebar-border flex h-16 items-center justify-between border-b px-6">
           <Logo />
+          <ThemeToggle />
         </div>
         <div className="flex-1 overflow-y-auto p-3">
           <NavLinks />
@@ -49,6 +51,9 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         <header className="border-border bg-background flex h-16 items-center gap-3 border-b px-4 md:hidden">
           <MobileNav email={email} />
           <Logo />
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
         </header>
 
         <main id="contenido" className="flex-1 px-4 py-6 sm:px-6 lg:px-8">

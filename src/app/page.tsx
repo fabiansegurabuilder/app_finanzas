@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, PieChart, Wallet, ListChecks } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/layout/logo";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const CARACTERISTICAS = [
   {
@@ -30,6 +31,7 @@ export default function LandingPage() {
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-6">
         <Logo href="/" />
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Button variant="ghost" render={<Link href="/login" />}>
             Iniciar sesión
           </Button>
