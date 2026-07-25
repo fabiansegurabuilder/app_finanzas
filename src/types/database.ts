@@ -5,7 +5,7 @@
  * Reflejan el esquema de `supabase/migrations`.
  */
 
-export interface TransaccionRow {
+export type TransaccionRow = {
   id: string;
   user_id: string;
   descripcion: string;
@@ -14,7 +14,7 @@ export interface TransaccionRow {
   categoria: string;
   fecha: string; // formato ISO YYYY-MM-DD
   created_at: string;
-}
+};
 
 export type TransaccionInsert = Omit<
   TransaccionRow,
@@ -34,10 +34,12 @@ export interface Database {
         Row: TransaccionRow;
         Insert: TransaccionInsert;
         Update: TransaccionUpdate;
+        Relationships: [];
       };
     };
-    Views: Record<never, never>;
-    Functions: Record<never, never>;
-    Enums: Record<never, never>;
+    Views: { [_ in never]: never };
+    Functions: { [_ in never]: never };
+    Enums: { [_ in never]: never };
+    CompositeTypes: { [_ in never]: never };
   };
 }

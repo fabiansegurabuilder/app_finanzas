@@ -92,5 +92,5 @@ src/
 - [x] **Fase 1** — Setup del repositorio, tooling y calidad.
 - [x] **Fase 2** — Design system, layout, navegación y metadatos SEO.
 - [x] **Fase 3** — Supabase: esquema, RLS, autenticación y protección de rutas.
-- [ ] **Fase 4** — Dashboard, CRUD de transacciones, filtros y exportación CSV.
+- [x] **Fase 4** — Dashboard con gráfico, CRUD de transacciones, filtros, búsqueda y exportación CSV.
 - [ ] **Fase 5** — Pruebas, verificación responsive/accesible y despliegue.
