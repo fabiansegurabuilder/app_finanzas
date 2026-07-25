@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   ArrowLeftRight,
   Tags,
+  PiggyBank,
   type LucideIcon,
 } from "lucide-react";
 
@@ -15,5 +16,6 @@ export interface ItemNavegacion {
 export const NAV_PRINCIPAL: readonly ItemNavegacion[] = [
   { titulo: "Dashboard", href: "/dashboard", icono: LayoutDashboard },
   { titulo: "Transacciones", href: "/transacciones", icono: ArrowLeftRight },
+  { titulo: "Metas", href: "/metas", icono: PiggyBank },
   { titulo: "Categorías", href: "/categorias", icono: Tags },
 ] as const;

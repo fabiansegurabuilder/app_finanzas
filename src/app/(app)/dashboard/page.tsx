@@ -32,6 +32,7 @@ import {
 import { SelectorPeriodo, type Vista } from "@/components/selector-periodo";
 import { GraficoCategorias } from "@/features/dashboard/components/grafico-categorias";
 import { GraficoMensual } from "@/features/dashboard/components/grafico-mensual";
+import { ResumenAhorro } from "@/features/metas/components/resumen-ahorro";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -122,6 +123,8 @@ export default async function DashboardPage({
             deltaMejorSiSube
           />
         </div>
+
+        <ResumenAhorro />
 
         {/* Destacados del año */}
         <div className="grid gap-4 sm:grid-cols-3">
@@ -241,6 +244,8 @@ export default async function DashboardPage({
           deltaMejorSiSube
         />
       </div>
+
+      <ResumenAhorro />
 
       <Card className="animate-in fade-in slide-in-from-bottom-2 delay-100 duration-500">
         <CardHeader>
