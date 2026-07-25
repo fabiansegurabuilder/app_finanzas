@@ -42,3 +42,9 @@ export function mesesRecientes(
 export function hoyISO(): string {
   return format(new Date(), "yyyy-MM-dd");
 }
+
+/** Devuelve el mes anterior a uno dado ("YYYY-MM"). */
+export function mesAnterior(mes: string): string {
+  const base = parse(mes, "yyyy-MM", new Date());
+  return format(subMonths(base, 1), "yyyy-MM");
+}

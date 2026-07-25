@@ -10,7 +10,7 @@ import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatearMoneda } from "@/lib/format";
-import { mesActual, etiquetaMes } from "@/lib/fechas";
+import { mesActual, etiquetaMes, mesAnterior } from "@/lib/fechas";
 import { listarTransacciones } from "@/features/transacciones/data";
 import {
   calcularResumen,
@@ -33,10 +33,19 @@ export default async function DashboardPage({
   const { mes: mesParam } = await searchParams;
   const mes = mesParam ?? mesActual();
 
-  const transacciones = await listarTransacciones({ mes });
+  const [transacciones, transaccionesPrev] = await Promise.all([
+    listarTransacciones({ mes }),
+    listarTransacciones({ mes: mesAnterior(mes) }),
+  ]);
+
   const { ingresos, gastos, saldo } = calcularResumen(transacciones);
+  const previo = calcularResumen(transaccionesPrev);
   const gastosPorCategoria = agruparGastosPorCategoria(transacciones);
   const detalle = etiquetaMes(mes);
+
+  // Variación relativa respecto al mes anterior (null si no hay base).
+  const delta = (actual: number, anterior: number): number | null =>
+    anterior === 0 ? null : (actual - anterior) / anterior;
 
   return (
     <>
@@ -53,6 +62,8 @@ export default async function DashboardPage({
           icono={TrendingUp}
           tono="ingreso"
           detalle={detalle}
+          delta={delta(ingresos, previo.ingresos)}
+          deltaMejorSiSube
         />
         <StatCard
           titulo="Gastos"
@@ -60,17 +71,21 @@ export default async function DashboardPage({
           icono={TrendingDown}
           tono="gasto"
           detalle={detalle}
+          delta={delta(gastos, previo.gastos)}
+          deltaMejorSiSube={false}
         />
         <StatCard
           titulo="Saldo"
           valor={formatearMoneda(saldo)}
           icono={Wallet}
-          tono="neutro"
+          tono={saldo >= 0 ? "ingreso" : "gasto"}
           detalle={detalle}
+          delta={delta(saldo, previo.saldo)}
+          deltaMejorSiSube
         />
       </div>
 
-      <Card>
+      <Card className="animate-in fade-in slide-in-from-bottom-2 delay-100 duration-500">
         <CardHeader>
           <CardTitle>Gastos por categoría</CardTitle>
         </CardHeader>

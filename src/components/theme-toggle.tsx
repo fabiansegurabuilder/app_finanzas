@@ -1,41 +1,59 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { Check, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-/** Botón para alternar entre modo claro y oscuro. */
+const OPCIONES = [
+  { valor: "light", etiqueta: "Claro", icono: Sun },
+  { valor: "dark", etiqueta: "Oscuro", icono: Moon },
+  { valor: "system", etiqueta: "Sistema", icono: Monitor },
+] as const;
+
+/** Menú para elegir el tema: claro, oscuro o el del sistema. */
 export function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const [montado, setMontado] = useState(false);
 
-  // Evita el desajuste de hidratación: el tema real solo se conoce en cliente.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- patrón "montado" intencional para next-themes
     setMontado(true);
   }, []);
 
-  const esOscuro = resolvedTheme === "dark";
+  const esOscuro = montado && resolvedTheme === "dark";
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      aria-label={esOscuro ? "Activar modo claro" : "Activar modo oscuro"}
-      title={esOscuro ? "Modo claro" : "Modo oscuro"}
-      onClick={() => setTheme(esOscuro ? "light" : "dark")}
-    >
-      {montado ? (
-        esOscuro ? (
-          <Sun className="size-4" />
-        ) : (
-          <Moon className="size-4" />
-        )
-      ) : (
-        // Placeholder sin icono hasta montar (evita parpadeo/mismatch).
-        <Sun className="size-4 opacity-0" />
-      )}
-    </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button variant="ghost" size="icon" aria-label="Cambiar tema" />
+        }
+      >
+        {esOscuro ? <Moon className="size-4" /> : <Sun className="size-4" />}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-36">
+        {OPCIONES.map((opcion) => {
+          const Icono = opcion.icono;
+          const activo = montado && theme === opcion.valor;
+          return (
+            <DropdownMenuItem
+              key={opcion.valor}
+              onClick={() => setTheme(opcion.valor)}
+            >
+              <Icono className="size-4" />
+              {opcion.etiqueta}
+              {activo ? <Check className="ml-auto size-4" /> : null}
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

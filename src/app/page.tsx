@@ -68,7 +68,7 @@ export default function LandingPage() {
             return (
               <div
                 key={caracteristica.titulo}
-                className="border-border bg-card rounded-xl border p-6 text-left"
+                className="animate-in fade-in slide-in-from-bottom-3 border-border bg-card rounded-xl border p-6 text-left duration-700"
               >
                 <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-lg">
                   <Icono className="size-5" aria-hidden="true" />

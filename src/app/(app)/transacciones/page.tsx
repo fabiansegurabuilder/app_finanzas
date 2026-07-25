@@ -10,6 +10,7 @@ import { FiltrosTransacciones } from "@/features/transacciones/components/filtro
 import { TablaTransacciones } from "@/features/transacciones/components/tabla-transacciones";
 import { DialogoTransaccion } from "@/features/transacciones/components/dialogo-transaccion";
 import { BotonExportar } from "@/features/transacciones/components/boton-exportar";
+import { ResumenFiltro } from "@/features/transacciones/components/resumen-filtro";
 
 export const metadata: Metadata = {
   title: "Transacciones",
@@ -81,11 +82,14 @@ export default async function TransaccionesPage({
           </CardContent>
         </Card>
       ) : (
-        <Card>
-          <CardContent>
-            <TablaTransacciones transacciones={transacciones} />
-          </CardContent>
-        </Card>
+        <>
+          <ResumenFiltro transacciones={transacciones} />
+          <Card>
+            <CardContent>
+              <TablaTransacciones transacciones={transacciones} />
+            </CardContent>
+          </Card>
+        </>
       )}
     </>
   );
