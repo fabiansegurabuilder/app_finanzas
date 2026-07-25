@@ -81,7 +81,7 @@ src/
 ## Estado del proyecto
 
 - [x] **Fase 1** — Setup del repositorio, tooling y calidad.
-- [ ] **Fase 2** — Design system, layout y navegación.
+- [x] **Fase 2** — Design system, layout, navegación y metadatos SEO.
 - [ ] **Fase 3** — Supabase: esquema, RLS y autenticación.
 - [ ] **Fase 4** — Dashboard, CRUD de transacciones, filtros y exportación CSV.
 - [ ] **Fase 5** — Pruebas, verificación responsive/accesible y despliegue.

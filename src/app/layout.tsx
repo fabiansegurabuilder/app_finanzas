@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,10 +13,40 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const tituloApp = "Finanzas Personales";
+const descripcionApp =
+  "Registra ingresos y gastos, categorízalos y visualiza tu saldo mensual en un dashboard claro.";
+
+const urlSitio = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "Finanzas Personales",
-  description:
-    "Registra ingresos y gastos, categorízalos y visualiza tu saldo mensual en un dashboard claro.",
+  metadataBase: new URL(urlSitio),
+  title: {
+    default: tituloApp,
+    template: `%s · ${tituloApp}`,
+  },
+  description: descripcionApp,
+  applicationName: tituloApp,
+  keywords: [
+    "finanzas personales",
+    "presupuesto",
+    "ingresos",
+    "gastos",
+    "dashboard financiero",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "es_CO",
+    title: tituloApp,
+    description: descripcionApp,
+    siteName: tituloApp,
+    url: urlSitio,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: tituloApp,
+    description: descripcionApp,
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +59,10 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        {children}
+        <Toaster richColors position="top-right" />
+      </body>
     </html>
   );
 }
