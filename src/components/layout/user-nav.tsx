@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -45,7 +44,9 @@ export function UserNav({ email, nombre, avatarUrl }: UserNavProps) {
         <ChevronsUpDown className="text-muted-foreground size-4 shrink-0" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="truncate">{mostrar}</DropdownMenuLabel>
+        <div className="text-muted-foreground truncate px-1.5 py-1 text-xs font-medium">
+          {mostrar}
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem render={<Link href="/perfil" />}>
           <User className="size-4" />
