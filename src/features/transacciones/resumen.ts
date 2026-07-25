@@ -64,6 +64,18 @@ export function agruparGastosPorCategoria(
     .sort((a, b) => b.total - a.total);
 }
 
+/** Mapa id de categoría → total gastado (solo gastos). */
+export function totalesGastoPorCategoria(
+  transacciones: readonly Transaccion[],
+): Record<string, number> {
+  const totales: Record<string, number> = {};
+  for (const t of transacciones) {
+    if (t.tipo !== "gasto") continue;
+    totales[t.categoria] = (totales[t.categoria] ?? 0) + t.valor;
+  }
+  return totales;
+}
+
 export interface ResumenMensual {
   /** Número de mes (1–12). */
   mes: number;

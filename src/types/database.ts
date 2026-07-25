@@ -70,6 +70,25 @@ export type MetaInsert = Omit<
 
 export type MetaUpdate = Partial<MetaInsert>;
 
+export type PresupuestoRow = {
+  id: string;
+  user_id: string;
+  categoria: string;
+  monto: number;
+  created_at: string;
+};
+
+export type PresupuestoInsert = Omit<
+  PresupuestoRow,
+  "id" | "user_id" | "created_at"
+> & {
+  id?: string;
+  user_id?: string;
+  created_at?: string;
+};
+
+export type PresupuestoUpdate = Partial<PresupuestoInsert>;
+
 export interface Database {
   public: {
     Tables: {
@@ -89,6 +108,12 @@ export interface Database {
         Row: MetaRow;
         Insert: MetaInsert;
         Update: MetaUpdate;
+        Relationships: [];
+      };
+      budgets: {
+        Row: PresupuestoRow;
+        Insert: PresupuestoInsert;
+        Update: PresupuestoUpdate;
         Relationships: [];
       };
     };

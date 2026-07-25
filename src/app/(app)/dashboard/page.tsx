@@ -28,11 +28,13 @@ import {
   calcularResumen,
   agruparGastosPorCategoria,
   agruparPorMes,
+  totalesGastoPorCategoria,
 } from "@/features/transacciones/resumen";
 import { SelectorPeriodo, type Vista } from "@/components/selector-periodo";
 import { GraficoCategorias } from "@/features/dashboard/components/grafico-categorias";
 import { GraficoMensual } from "@/features/dashboard/components/grafico-mensual";
 import { ResumenAhorro } from "@/features/metas/components/resumen-ahorro";
+import { ProgresoPresupuestos } from "@/features/presupuestos/components/progreso-presupuestos";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -205,6 +207,7 @@ export default async function DashboardPage({
   const { ingresos, gastos, saldo } = calcularResumen(transacciones);
   const previo = calcularResumen(transaccionesPrev);
   const gastosPorCategoria = agruparGastosPorCategoria(transacciones, catalogo);
+  const gastadoPorCategoria = totalesGastoPorCategoria(transacciones);
   const detalle = etiquetaMes(mes);
 
   return (
@@ -244,6 +247,11 @@ export default async function DashboardPage({
           deltaMejorSiSube
         />
       </div>
+
+      <ProgresoPresupuestos
+        gastadoPorCategoria={gastadoPorCategoria}
+        catalogo={catalogo}
+      />
 
       <ResumenAhorro />
 
