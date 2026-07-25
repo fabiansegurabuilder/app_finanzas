@@ -1,15 +1,27 @@
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
 import { Logo } from "@/components/layout/logo";
 import { NavLinks } from "@/components/layout/nav-links";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import { UserNav } from "@/components/layout/user-nav";
+import { crearClienteServidor } from "@/lib/supabase/server";
 
 /**
- * Layout del área autenticada.
- *
- * La protección real de rutas (redirección a login sin sesión) se
- * incorpora en la Fase 3, cuando se integre Supabase Auth.
+ * Layout del área autenticada. Exige sesión iniciada: si no hay usuario,
+ * redirige a /login. La sesión se refresca además en el middleware.
  */
-export default function AppLayout({ children }: { children: ReactNode }) {
+export default async function AppLayout({ children }: { children: ReactNode }) {
+  const supabase = await crearClienteServidor();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const email = user.email ?? "Usuario";
+
   return (
     <div className="flex min-h-svh w-full">
       {/* Sidebar (escritorio) */}
@@ -21,9 +33,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           <NavLinks />
         </div>
         <div className="border-sidebar-border border-t p-4">
-          <p className="text-muted-foreground text-xs">
-            App Finanzas Personales
-          </p>
+          <UserNav email={email} />
         </div>
       </aside>
 
@@ -31,7 +41,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Barra superior (móvil) */}
         <header className="border-border bg-background flex h-16 items-center gap-3 border-b px-4 md:hidden">
-          <MobileNav />
+          <MobileNav email={email} />
           <Logo />
         </header>
 

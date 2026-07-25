@@ -46,6 +46,15 @@ Definidas en `.env.example`. Copia el archivo a `.env.local` y completa:
 
 > Nunca subas `.env.local` ni claves reales al repositorio. `.gitignore` ya excluye los archivos `.env*` (salvo `.env.example`).
 
+## Configuración de Supabase
+
+1. Crea un proyecto en [Supabase](https://supabase.com).
+2. En **Project Settings → API**, copia la _Project URL_ y la clave _anon public_ a tu `.env.local`.
+3. En el **SQL Editor**, ejecuta el script [`supabase/migrations/0001_transacciones.sql`](supabase/migrations/0001_transacciones.sql). Crea la tabla `transactions`, sus índices y las políticas de **Row Level Security** (cada usuario solo accede a sus propias filas).
+4. En **Authentication → Providers → Email**, habilita el proveedor de correo/contraseña. Para probar sin bandeja de correo, puedes desactivar _Confirm email_ (así el registro inicia sesión de inmediato).
+
+Sin estas variables, la landing pública funciona, pero las rutas protegidas y la autenticación no estarán disponibles.
+
 ## Scripts disponibles
 
 | Script                 | Descripción                               |
@@ -82,6 +91,6 @@ src/
 
 - [x] **Fase 1** — Setup del repositorio, tooling y calidad.
 - [x] **Fase 2** — Design system, layout, navegación y metadatos SEO.
-- [ ] **Fase 3** — Supabase: esquema, RLS y autenticación.
+- [x] **Fase 3** — Supabase: esquema, RLS, autenticación y protección de rutas.
 - [ ] **Fase 4** — Dashboard, CRUD de transacciones, filtros y exportación CSV.
 - [ ] **Fase 5** — Pruebas, verificación responsive/accesible y despliegue.
