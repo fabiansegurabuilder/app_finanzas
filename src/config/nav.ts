@@ -1,4 +1,9 @@
-import { LayoutDashboard, ArrowLeftRight, type LucideIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  ArrowLeftRight,
+  Tags,
+  type LucideIcon,
+} from "lucide-react";
 
 export interface ItemNavegacion {
   titulo: string;
@@ -10,4 +15,5 @@ export interface ItemNavegacion {
 export const NAV_PRINCIPAL: readonly ItemNavegacion[] = [
   { titulo: "Dashboard", href: "/dashboard", icono: LayoutDashboard },
   { titulo: "Transacciones", href: "/transacciones", icono: ArrowLeftRight },
+  { titulo: "Categorías", href: "/categorias", icono: Tags },
 ] as const;

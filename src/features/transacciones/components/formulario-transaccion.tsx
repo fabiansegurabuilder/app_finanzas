@@ -13,7 +13,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { categoriasPorTipo, type TipoTransaccion } from "@/lib/categorias";
+import {
+  filtrarPorTipo,
+  type Categoria,
+  type TipoTransaccion,
+} from "@/lib/categorias";
 import { hoyISO } from "@/lib/fechas";
 import type { Transaccion } from "@/types/transaccion";
 import type { EstadoTransaccion } from "@/features/transacciones/schemas";
@@ -26,6 +30,8 @@ type AccionTransaccion = (
 interface FormularioTransaccionProps {
   accion: AccionTransaccion;
   transaccion?: Transaccion;
+  /** Lista combinada de categorías (predefinidas + personalizadas). */
+  categorias: Categoria[];
   /** Se invoca cuando la operación se completa con éxito. */
   onExito: () => void;
 }
@@ -49,6 +55,7 @@ function BotonGuardar() {
 export function FormularioTransaccion({
   accion,
   transaccion,
+  categorias,
   onExito,
 }: FormularioTransaccionProps) {
   const [estado, formAction] = useActionState<EstadoTransaccion, FormData>(
@@ -62,7 +69,7 @@ export function FormularioTransaccion({
     transaccion?.categoria ?? "",
   );
 
-  const categorias = categoriasPorTipo(tipo);
+  const opciones = filtrarPorTipo(categorias, tipo);
 
   useEffect(() => {
     if (estado.ok) {
@@ -75,7 +82,7 @@ export function FormularioTransaccion({
     const valor = nuevoTipo as TipoTransaccion;
     setTipo(valor);
     // Si la categoría actual no aplica al nuevo tipo, se limpia.
-    const sigueValida = categoriasPorTipo(valor).some(
+    const sigueValida = filtrarPorTipo(categorias, valor).some(
       (c) => c.id === categoria,
     );
     if (!sigueValida) setCategoria("");
@@ -146,7 +153,7 @@ export function FormularioTransaccion({
               <SelectValue placeholder="Categoría" />
             </SelectTrigger>
             <SelectContent>
-              {categorias.map((c) => (
+              {opciones.map((c) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.nombre}
                 </SelectItem>

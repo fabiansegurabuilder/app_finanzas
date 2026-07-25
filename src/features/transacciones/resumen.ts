@@ -1,5 +1,9 @@
 import type { Transaccion } from "@/types/transaccion";
-import { obtenerCategoria } from "@/lib/categorias";
+import {
+  obtenerCategoria,
+  resolverCategoria,
+  type Catalogo,
+} from "@/lib/categorias";
 import { MESES_CORTOS } from "@/lib/fechas";
 
 export interface ResumenFinanciero {
@@ -36,6 +40,7 @@ export function calcularResumen(
  */
 export function agruparGastosPorCategoria(
   transacciones: readonly Transaccion[],
+  catalogo?: Catalogo,
 ): GastoCategoria[] {
   const totales = new Map<string, number>();
 
@@ -46,7 +51,9 @@ export function agruparGastosPorCategoria(
 
   return Array.from(totales.entries())
     .map(([categoriaId, total]) => {
-      const categoria = obtenerCategoria(categoriaId);
+      const categoria = catalogo
+        ? resolverCategoria(catalogo, categoriaId)
+        : obtenerCategoria(categoriaId);
       return {
         categoriaId,
         nombre: categoria.nombre,

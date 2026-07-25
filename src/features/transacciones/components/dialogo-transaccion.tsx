@@ -16,16 +16,20 @@ import {
   actualizarTransaccion,
 } from "@/features/transacciones/actions";
 import type { Transaccion } from "@/types/transaccion";
+import type { Categoria } from "@/lib/categorias";
 
 interface DialogoTransaccionProps {
   /** Elemento que abre el diálogo (botón). */
   trigger: ReactElement;
+  /** Lista combinada de categorías (predefinidas + personalizadas). */
+  categorias: Categoria[];
   /** Si se pasa, el diálogo edita esa transacción; si no, crea una nueva. */
   transaccion?: Transaccion;
 }
 
 export function DialogoTransaccion({
   trigger,
+  categorias,
   transaccion,
 }: DialogoTransaccionProps) {
   const [abierto, setAbierto] = useState(false);
@@ -59,6 +63,7 @@ export function DialogoTransaccion({
         <FormularioTransaccion
           accion={accion}
           transaccion={transaccion}
+          categorias={categorias}
           onExito={alCompletar}
         />
       </DialogContent>

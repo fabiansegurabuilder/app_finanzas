@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SelectorPeriodo, type Vista } from "@/components/selector-periodo";
-import { CATEGORIAS } from "@/lib/categorias";
+import type { Categoria } from "@/lib/categorias";
 
 const TODAS = "todas";
 
@@ -22,6 +22,7 @@ interface FiltrosTransaccionesProps {
   anio: string;
   categoria?: string;
   q?: string;
+  categorias: Categoria[];
 }
 
 /** Barra de filtros: periodo (mes/año), categoría y búsqueda. */
@@ -31,6 +32,7 @@ export function FiltrosTransacciones({
   anio,
   categoria,
   q,
+  categorias,
 }: FiltrosTransaccionesProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -90,7 +92,7 @@ export function FiltrosTransacciones({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value={TODAS}>Todas las categorías</SelectItem>
-          {CATEGORIAS.map((c) => (
+          {categorias.map((c) => (
             <SelectItem key={c.id} value={c.id}>
               {c.nombre}
             </SelectItem>

@@ -1,5 +1,9 @@
 import type { Transaccion } from "@/types/transaccion";
-import { obtenerCategoria } from "@/lib/categorias";
+import {
+  obtenerCategoria,
+  resolverCategoria,
+  type Catalogo,
+} from "@/lib/categorias";
 
 const CABECERAS = ["Fecha", "Descripción", "Categoría", "Tipo", "Valor"];
 
@@ -12,9 +16,14 @@ function escapar(campo: string): string {
 }
 
 /** Genera el contenido CSV de un conjunto de transacciones. */
-export function generarCSV(transacciones: readonly Transaccion[]): string {
+export function generarCSV(
+  transacciones: readonly Transaccion[],
+  catalogo?: Catalogo,
+): string {
   const filas = transacciones.map((t) => {
-    const categoria = obtenerCategoria(t.categoria).nombre;
+    const categoria = catalogo
+      ? resolverCategoria(catalogo, t.categoria).nombre
+      : obtenerCategoria(t.categoria).nombre;
     const tipo = t.tipo === "ingreso" ? "Ingreso" : "Gasto";
     return [t.fecha, t.descripcion, categoria, tipo, String(t.valor)]
       .map(escapar)

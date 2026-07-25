@@ -1,8 +1,20 @@
-import { obtenerCategoria } from "@/lib/categorias";
+import {
+  obtenerCategoria,
+  resolverCategoria,
+  type Catalogo,
+} from "@/lib/categorias";
 
 /** Muestra el nombre de una categoría con un punto de su color. */
-export function CategoriaBadge({ categoriaId }: { categoriaId: string }) {
-  const categoria = obtenerCategoria(categoriaId);
+export function CategoriaBadge({
+  categoriaId,
+  catalogo,
+}: {
+  categoriaId: string;
+  catalogo?: Catalogo;
+}) {
+  const categoria = catalogo
+    ? resolverCategoria(catalogo, categoriaId)
+    : obtenerCategoria(categoriaId);
   return (
     <span className="inline-flex items-center gap-2 text-sm">
       <span

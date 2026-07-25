@@ -18,16 +18,14 @@ export const transaccionSchema = z
       .regex(/^\d{4}-\d{2}-\d{2}$/, "Selecciona una fecha válida."),
   })
   .superRefine((datos, ctx) => {
+    // Solo validamos coherencia para las categorías predefinidas. Las
+    // personalizadas (uuid) se validan por pertenencia vía RLS al guardar.
     const categoria = CATEGORIAS_POR_ID[datos.categoria];
-    if (!categoria) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["categoria"],
-        message: "Categoría no válida.",
-      });
-      return;
-    }
-    if (categoria.aplicaEn !== "ambos" && categoria.aplicaEn !== datos.tipo) {
+    if (
+      categoria &&
+      categoria.aplicaEn !== "ambos" &&
+      categoria.aplicaEn !== datos.tipo
+    ) {
       ctx.addIssue({
         code: "custom",
         path: ["categoria"],

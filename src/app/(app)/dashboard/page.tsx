@@ -21,7 +21,9 @@ import {
   anioActual,
   esAnioValido,
 } from "@/lib/fechas";
+import { construirCatalogo } from "@/lib/categorias";
 import { listarTransacciones } from "@/features/transacciones/data";
+import { listarCategoriasUsuario } from "@/features/categorias/data";
 import {
   calcularResumen,
   agruparGastosPorCategoria,
@@ -57,15 +59,21 @@ export default async function DashboardPage({
 
   if (vista === "anio") {
     const anioPrevio = String(Number(anio) - 1);
-    const [transacciones, transaccionesPrev] = await Promise.all([
-      listarTransacciones({ anio }),
-      listarTransacciones({ anio: anioPrevio }),
-    ]);
+    const [transacciones, transaccionesPrev, personalizadas] =
+      await Promise.all([
+        listarTransacciones({ anio }),
+        listarTransacciones({ anio: anioPrevio }),
+        listarCategoriasUsuario(),
+      ]);
+    const catalogo = construirCatalogo(personalizadas);
 
     const { ingresos, gastos, saldo } = calcularResumen(transacciones);
     const previo = calcularResumen(transaccionesPrev);
     const mensual = agruparPorMes(transacciones);
-    const gastosPorCategoria = agruparGastosPorCategoria(transacciones);
+    const gastosPorCategoria = agruparGastosPorCategoria(
+      transacciones,
+      catalogo,
+    );
     const detalle = `Año ${anio}`;
 
     const conGasto = mensual.filter((m) => m.gastos > 0);
@@ -184,14 +192,16 @@ export default async function DashboardPage({
   }
 
   // Vista mensual
-  const [transacciones, transaccionesPrev] = await Promise.all([
+  const [transacciones, transaccionesPrev, personalizadas] = await Promise.all([
     listarTransacciones({ mes }),
     listarTransacciones({ mes: mesAnterior(mes) }),
+    listarCategoriasUsuario(),
   ]);
+  const catalogo = construirCatalogo(personalizadas);
 
   const { ingresos, gastos, saldo } = calcularResumen(transacciones);
   const previo = calcularResumen(transaccionesPrev);
-  const gastosPorCategoria = agruparGastosPorCategoria(transacciones);
+  const gastosPorCategoria = agruparGastosPorCategoria(transacciones, catalogo);
   const detalle = etiquetaMes(mes);
 
   return (

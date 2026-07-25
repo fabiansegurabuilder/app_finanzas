@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatearFecha, formatearMoneda } from "@/lib/format";
+import type { Catalogo, Categoria } from "@/lib/categorias";
 import type { Transaccion } from "@/types/transaccion";
 import { CategoriaBadge } from "@/features/transacciones/components/categoria-badge";
 import { DialogoTransaccion } from "@/features/transacciones/components/dialogo-transaccion";
@@ -32,11 +33,18 @@ function MontoConSigno({ t }: { t: Transaccion }) {
   );
 }
 
-function AccionesFila({ t }: { t: Transaccion }) {
+function AccionesFila({
+  t,
+  categorias,
+}: {
+  t: Transaccion;
+  categorias: Categoria[];
+}) {
   return (
     <div className="flex justify-end gap-1">
       <DialogoTransaccion
         transaccion={t}
+        categorias={categorias}
         trigger={
           <Button variant="ghost" size="icon" aria-label="Editar transacción">
             <Pencil className="size-4" />
@@ -58,8 +66,12 @@ function AccionesFila({ t }: { t: Transaccion }) {
 
 export function TablaTransacciones({
   transacciones,
+  categorias,
+  catalogo,
 }: {
   transacciones: Transaccion[];
+  categorias: Categoria[];
+  catalogo: Catalogo;
 }) {
   return (
     <>
@@ -83,13 +95,16 @@ export function TablaTransacciones({
                 </TableCell>
                 <TableCell className="font-medium">{t.descripcion}</TableCell>
                 <TableCell>
-                  <CategoriaBadge categoriaId={t.categoria} />
+                  <CategoriaBadge
+                    categoriaId={t.categoria}
+                    catalogo={catalogo}
+                  />
                 </TableCell>
                 <TableCell className="text-right">
                   <MontoConSigno t={t} />
                 </TableCell>
                 <TableCell>
-                  <AccionesFila t={t} />
+                  <AccionesFila t={t} categorias={categorias} />
                 </TableCell>
               </TableRow>
             ))}
@@ -110,11 +125,11 @@ export function TablaTransacciones({
                 <p className="text-muted-foreground text-xs">
                   {formatearFecha(t.fecha)}
                 </p>
-                <CategoriaBadge categoriaId={t.categoria} />
+                <CategoriaBadge categoriaId={t.categoria} catalogo={catalogo} />
               </div>
               <div className="flex flex-col items-end gap-2">
                 <MontoConSigno t={t} />
-                <AccionesFila t={t} />
+                <AccionesFila t={t} categorias={categorias} />
               </div>
             </div>
           </li>

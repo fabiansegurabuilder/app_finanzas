@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { mesActual, anioActual, esAnioValido } from "@/lib/fechas";
 import type { Vista } from "@/components/selector-periodo";
+import { combinarCategorias, construirCatalogo } from "@/lib/categorias";
 import { listarTransacciones } from "@/features/transacciones/data";
+import { listarCategoriasUsuario } from "@/features/categorias/data";
 import { FiltrosTransacciones } from "@/features/transacciones/components/filtros-transacciones";
 import { TablaTransacciones } from "@/features/transacciones/components/tabla-transacciones";
 import { DialogoTransaccion } from "@/features/transacciones/components/dialogo-transaccion";
@@ -38,11 +40,12 @@ export default async function TransaccionesPage({
     params.anio && esAnioValido(params.anio) ? params.anio : anioActual();
 
   const filtroPeriodo = vista === "anio" ? { anio } : { mes };
-  const transacciones = await listarTransacciones({
-    ...filtroPeriodo,
-    categoria,
-    q,
-  });
+  const [transacciones, personalizadas] = await Promise.all([
+    listarTransacciones({ ...filtroPeriodo, categoria, q }),
+    listarCategoriasUsuario(),
+  ]);
+  const categorias = combinarCategorias(personalizadas);
+  const catalogo = construirCatalogo(personalizadas);
   const hayFiltrosTexto = Boolean(q || categoria);
   const sufijoExport = vista === "anio" ? anio : mes;
 
@@ -53,8 +56,13 @@ export default async function TransaccionesPage({
         descripcion="Registra, edita y filtra tus ingresos y gastos."
         acciones={
           <>
-            <BotonExportar transacciones={transacciones} mes={sufijoExport} />
+            <BotonExportar
+              transacciones={transacciones}
+              mes={sufijoExport}
+              catalogo={catalogo}
+            />
             <DialogoTransaccion
+              categorias={categorias}
               trigger={
                 <Button>
                   <Plus className="size-4" />
@@ -72,6 +80,7 @@ export default async function TransaccionesPage({
         anio={anio}
         categoria={categoria}
         q={q}
+        categorias={categorias}
       />
 
       {transacciones.length === 0 ? (
@@ -92,6 +101,7 @@ export default async function TransaccionesPage({
               accion={
                 hayFiltrosTexto ? undefined : (
                   <DialogoTransaccion
+                    categorias={categorias}
                     trigger={
                       <Button>
                         <Plus className="size-4" />
@@ -109,7 +119,11 @@ export default async function TransaccionesPage({
           <ResumenFiltro transacciones={transacciones} />
           <Card>
             <CardContent>
-              <TablaTransacciones transacciones={transacciones} />
+              <TablaTransacciones
+                transacciones={transacciones}
+                categorias={categorias}
+                catalogo={catalogo}
+              />
             </CardContent>
           </Card>
         </>

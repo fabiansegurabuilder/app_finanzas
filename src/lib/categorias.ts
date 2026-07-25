@@ -86,3 +86,68 @@ export function categoriasPorTipo(tipo: TipoTransaccion): Categoria[] {
       categoria.aplicaEn === tipo || categoria.aplicaEn === "ambos",
   );
 }
+
+/** Filtra una lista de categorías (preset + personalizadas) por tipo. */
+export function filtrarPorTipo(
+  categorias: readonly Categoria[],
+  tipo: TipoTransaccion,
+): Categoria[] {
+  return categorias.filter(
+    (c) => c.aplicaEn === tipo || c.aplicaEn === "ambos",
+  );
+}
+
+/** Paleta de colores disponible al crear categorías personalizadas. */
+export const PALETA_COLORES: { valor: string; nombre: string }[] = [
+  { valor: "var(--chart-1)", nombre: "Violeta" },
+  { valor: "var(--chart-2)", nombre: "Azul" },
+  { valor: "var(--chart-3)", nombre: "Turquesa" },
+  { valor: "var(--chart-4)", nombre: "Verde" },
+  { valor: "var(--chart-5)", nombre: "Ámbar" },
+  { valor: "var(--chart-6)", nombre: "Naranja" },
+  { valor: "var(--chart-7)", nombre: "Rojo" },
+  { valor: "var(--chart-8)", nombre: "Rosa" },
+];
+
+/** Dato mínimo para mostrar una categoría (nombre + color). */
+export interface CategoriaCatalogo {
+  nombre: string;
+  color: string;
+}
+
+/** Mapa id → {nombre, color} para resolver categorías en la UI. */
+export type Catalogo = Record<string, CategoriaCatalogo>;
+
+const RESPALDO: CategoriaCatalogo = {
+  nombre: "Otros",
+  color: "var(--muted-foreground)",
+};
+
+/**
+ * Construye un catálogo (preset + personalizadas). Las personalizadas
+ * tienen prioridad si comparten id (no debería ocurrir con uuids).
+ */
+export function construirCatalogo(
+  personalizadas: readonly Categoria[] = [],
+): Catalogo {
+  const catalogo: Catalogo = {};
+  for (const c of [...CATEGORIAS, ...personalizadas]) {
+    catalogo[c.id] = { nombre: c.nombre, color: c.color };
+  }
+  return catalogo;
+}
+
+/** Resuelve una categoría del catálogo, con respaldo "Otros". */
+export function resolverCategoria(
+  catalogo: Catalogo,
+  id: string,
+): CategoriaCatalogo {
+  return catalogo[id] ?? catalogo.otros ?? RESPALDO;
+}
+
+/** Lista combinada de categorías (preset + personalizadas). */
+export function combinarCategorias(
+  personalizadas: readonly Categoria[] = [],
+): Categoria[] {
+  return [...CATEGORIAS, ...personalizadas];
+}

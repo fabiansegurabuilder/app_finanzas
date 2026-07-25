@@ -27,6 +27,26 @@ export type TransaccionInsert = Omit<
 
 export type TransaccionUpdate = Partial<TransaccionInsert>;
 
+export type CategoriaRow = {
+  id: string;
+  user_id: string;
+  nombre: string;
+  tipo: "ingreso" | "gasto" | "ambos";
+  color: string;
+  created_at: string;
+};
+
+export type CategoriaInsert = Omit<
+  CategoriaRow,
+  "id" | "user_id" | "created_at"
+> & {
+  id?: string;
+  user_id?: string;
+  created_at?: string;
+};
+
+export type CategoriaUpdate = Partial<CategoriaInsert>;
+
 export interface Database {
   public: {
     Tables: {
@@ -34,6 +54,12 @@ export interface Database {
         Row: TransaccionRow;
         Insert: TransaccionInsert;
         Update: TransaccionUpdate;
+        Relationships: [];
+      };
+      categories: {
+        Row: CategoriaRow;
+        Insert: CategoriaInsert;
+        Update: CategoriaUpdate;
         Relationships: [];
       };
     };
